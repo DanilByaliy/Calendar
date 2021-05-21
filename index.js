@@ -1,8 +1,8 @@
 'use strict'
 
-let year = ''; //замінити лет на конст
-let numberMons = '05';
-let numberDay = '15';
+let year = '1954'; //замінити лет на конст
+let numberMons = '11';
+let numberDay = '23';
 let mons = [1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6];
 let days = ["субота", "неділя", "понеділок", "вівторок", "середа", "четвер", "п'ятниця"];
 
@@ -95,7 +95,7 @@ function getArrayDate() {
 
 function getAge() {
     let array = getArrayDate();
-    let age = array[2] - year - (array[1] >= numberMons ? 0 : 1);
+    let age = array[2] - year - (array[1] >= numberMons ? (array[1] === numberMons && array[0] >= numberDay ? 1 : 0) : 1);
     return age;
 };
 
@@ -130,9 +130,13 @@ function getCorrectionForFirstPartYear() {// від початку року до
 
 function getCorrectionForLastPartYear() {// від дня народження до сьогоднішньої дати
     let array = getArrayDate();
-    let correction = Number(array[0]) + getDayOfMonth(Number(numberMons)) - Number(numberDay);
-
-    let i = Number(array[1]) - 1;
+    let correction = Number(array[0]) + ((numberMons === array[1]) ? 0 : getDayOfMonth(Number(numberMons))) - Number(numberDay);
+    
+    if (numberMons === array[1] && numberDay > array[0]) {
+        correction += checkLeapYear(year) ? 366 : 365;
+    };
+    
+let i = Number(array[1]) - 1;
     let ii = Number(numberMons) + 1;
     for (i; i >= ii; i--) {
         //console.log('=' + correction);
@@ -144,7 +148,7 @@ function getCorrectionForLastPartYear() {// від дня народження �
 function getNumberOfDays() { //помилка при тому ж місяці
     let array = getArrayDate();
     let age = getAge();
-    let correctioN = (numberMons > array[1] || (numberMons === array[1] && numberDay >= array[0])) ? getCorrectionForFirstPartYear() : getCorrectionForLastPartYear();
+    let correctioN = (numberMons > array[1] /*|| (numberMons === array[1] && numberDay >= array[0])*/) ? getCorrectionForFirstPartYear() : getCorrectionForLastPartYear();
 
     correctioN += checkLeapYear(year) ? -1 : 0;
 
@@ -158,11 +162,36 @@ function getNumberOfDays() { //помилка при тому ж місяці
     //console.log(correctioN);
 
     let numberOfDays = age * 365 + correctioN;
+    return numberOfDays;
     console.log('numberOfDays = ' + numberOfDays);
+};
+
+function getNumberOfWeeks() {
+    let numberOfWeeks = Math.floor(getNumberOfDays() / 7);
+    return numberOfWeeks;
+};
+
+function getNumberOfHours() {
+    let numberOfHours = getNumberOfDays() * 24;
+    return numberOfHours;
+};
+
+function getNumberOfMinuts() {
+    let numberOfMinuts = getNumberOfHours() * 60;
+    return numberOfMinuts;
+};
+
+function getNumberOfMonths() {
+    let numberOfMonths = Math.floor(getNumberOfDays() / 30.4375);
+    return numberOfMonths;
 };
 
 if (chekGlobal()) {
     getDay(numberDay);
     console.log('age = ' + getAge());
-    getNumberOfDays();
+    console.log(getNumberOfDays());
+    console.log(getNumberOfWeeks());
+    console.log(getNumberOfHours());
+    console.log(getNumberOfMinuts());
+    console.log(getNumberOfMonths());
 };
