@@ -1,8 +1,8 @@
 'use strict'
 
-let year = '1954'; //замінити лет на конст
-let numberMons = '11';
-let numberDay = '23';
+let year = '2020'; //замінити лет на конст
+let numberMons = '05';
+let numberDay = '09';
 let mons = [1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6];
 let days = ["субота", "неділя", "понеділок", "вівторок", "середа", "четвер", "п'ятниця"];
 
@@ -70,7 +70,7 @@ function chekGlobal() {
 function getDay(value) {
     if (chekGlobal()) { //забрати звідси, бо зробив умову виконання всіх функцій
         let day = (correction + Number(value) + codeMons + codeYear) % 7;
-        console.log(days[day]);
+        return days[day];
     };
 };
 
@@ -135,13 +135,14 @@ function getCorrectionForLastPartYear() {// від дня народження �
     if (numberMons === array[1] && numberDay > array[0]) {
         correction += checkLeapYear(year) ? 366 : 365;
     };
-    
+
 let i = Number(array[1]) - 1;
     let ii = Number(numberMons) + 1;
     for (i; i >= ii; i--) {
         //console.log('=' + correction);
         correction += getDayOfMonth(i);
     };
+
     return correction;
 };
 
@@ -186,12 +187,31 @@ function getNumberOfMonths() {
     return numberOfMonths;
 };
 
+function getNumberOfRow() {
+    let numberOfDays = getDayOfMonth(numberMons);
+    let a;
+    let b = numberDay;
+    numberDay = '01';
+    if (numberOfDays === 28 && getDay('01') === 'понеділок') {
+        a = 4;
+    } else if (numberOfDays === 30 && getDay('01') === 'неділя'){
+        a = 6;
+    } else if (numberOfDays === 31 && (getDay('01') === 'неділя' || getDay('01') === 'субота')) {
+        a = 6;
+    } else a = 5;
+    numberDay = b;
+    console.log(numberDay);
+    console.log(a);
+    return a;
+}
+
 if (chekGlobal()) {
-    getDay(numberDay);
+    console.log(getDay(numberDay));
     console.log('age = ' + getAge());
     console.log(getNumberOfDays());
     console.log(getNumberOfWeeks());
     console.log(getNumberOfHours());
     console.log(getNumberOfMinuts());
     console.log(getNumberOfMonths());
+    console.log('---'  + getNumberOfRow());
 };
