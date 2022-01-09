@@ -215,3 +215,5 @@ if (chekGlobal()) {
     console.log(getNumberOfMonths());
     console.log('---'  + getNumberOfRow());
 };
+
+// 1
